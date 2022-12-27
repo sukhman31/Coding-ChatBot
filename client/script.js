@@ -61,3 +61,36 @@ function chatStripe(isAi, value, uniqueId) {
     `
     )
 }
+
+const handleSubmit = async (e) =>{
+
+    // to prevent website from refreshing
+    e.preventDefault()
+    const data = new FormData(form);
+
+    //user chat stripe
+    chatContainer.innerHTML += chatStripe(false,data.get('prompt'));
+    form.reset()
+
+    //bot chatstripe
+    const uniqueId = generateUniqueId();
+    chatContainer.innerHTML += chatStripe(true, " ",uniqueId);
+
+    //as user types we want to keep scrolling down
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    //to fetch newly created div
+    const messageDiv = document.getElementById(uniqueId);
+    loader(messageDiv);
+
+}
+
+//create a function that listens for submit and executes handleSubmit
+form.addEventListener('submit',handleSubmit());
+
+//to enable submission by pressing enter 
+form.addEventListener('keyup',(e)=>{
+    if(e.keyCode === 13){
+        handleSubmit(e);
+    }
+})
